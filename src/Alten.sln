@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alten.API", "src\Alten.API\Alten.API.csproj", "{138C3C27-AC12-4C34-A8DF-33DEFBA335D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alten.API", "Alten.API\Alten.API.csproj", "{138C3C27-AC12-4C34-A8DF-33DEFBA335D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alten.API.Tests", "tests\Alten.API.Tests\Alten.API.Tests.csproj", "{26356F29-0CFF-4890-88D4-0A284F484576}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alten.Domain", "src\Alten.Domain\Alten.Domain.csproj", "{5A18FF21-B0F2-40C1-8656-BEC56085B25D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alten.API.Tests", "Alten.API.Tests\Alten.API.Tests.csproj", "{26356F29-0CFF-4890-88D4-0A284F484576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,9 +24,5 @@ Global
 		{26356F29-0CFF-4890-88D4-0A284F484576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26356F29-0CFF-4890-88D4-0A284F484576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26356F29-0CFF-4890-88D4-0A284F484576}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A18FF21-B0F2-40C1-8656-BEC56085B25D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A18FF21-B0F2-40C1-8656-BEC56085B25D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A18FF21-B0F2-40C1-8656-BEC56085B25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A18FF21-B0F2-40C1-8656-BEC56085B25D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
