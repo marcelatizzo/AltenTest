@@ -1,28 +1,46 @@
-using Microsoft.OpenApi.Models;
+using Alten.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Alten.API", Version = "v1" });
-});
-
+builder.Services.AddHealthChecks();
+builder.Services.AddDbContext<ApiDbContext>(ServiceLifetime.Transient, ServiceLifetime.Scoped);
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alten.API v1"));
+    app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+app.UseHealthChecks("/status");
 
-app.UseAuthorization();
+app.MapGet("/reservations", async (ApiDbContext db) => 
+    db.Reservations.ToListAsync());
 
-app.MapControllers();
+app.MapGet("/reservations/{id}", async (int id, ApiDbContext db) => 
+    db.Reservations.FirstOrDefaultAsync(r => r.Id == id));
+
+app.MapPost("/reservations", async (Reservation reservation, ApiDbContext db) =>
+    {
+       db.Reservations.Add(reservation);
+       await db.SaveChangesAsync();
+
+       return reservation; 
+    });
+
+app.MapPut("/reservations/{id}", async (int id, Reservation reservation, ApiDbContext db) =>
+    {
+        db.Entry(reservation).State = EntityState.Modified;
+        await db.SaveChangesAsync();
+        return reservation;
+    });
+
+app.MapDelete("/reservations/{id}", async (int id, ApiDbContext db) =>
+    {
+        var reservation = await db.Reservations.FirstOrDefaultAsync(r => r.Id == id);
+
+        db.Reservations.Remove(reservation);
+        await db.SaveChangesAsync();
+        return;
+    });
 
 app.Run();
