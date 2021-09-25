@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
+
 builder.Services.AddDbContext<ApiDbContext>(ServiceLifetime.Transient, ServiceLifetime.Scoped);
 var app = builder.Build();
 
@@ -14,10 +15,15 @@ if (app.Environment.IsDevelopment())
 app.UseHealthChecks("/status");
 
 app.MapGet("/reservations", async (ApiDbContext db) => 
-    db.Reservations.ToListAsync());
+    await db.Reservations.ToListAsync());
 
 app.MapGet("/reservations/{id}", async (int id, ApiDbContext db) => 
-    db.Reservations.FirstOrDefaultAsync(r => r.Id == id));
+    await db.Reservations.FirstOrDefaultAsync(r => r.Id == id));
+
+app.MapGet("/reservations/check/{accomodationDate}", async (DateTime accomodationDate, ApiDbContext db) =>
+    {
+        await db.Reservations.FirstOrDefaultAsync(r => r.AccomodationStart >= accomodationDate && r.AccomodationEnd <= accomodationDate);
+    });
 
 app.MapPost("/reservations", async (Reservation reservation, ApiDbContext db) =>
     {
