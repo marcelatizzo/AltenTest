@@ -1,8 +1,9 @@
 using Alten.API.Models;
-using Microsoft.EntityFrameworkCore;
+using Alten.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddDbContext<ApiDbContext>(ServiceLifetime.Transient, ServiceLifetime.Scoped);
 var app = builder.Build();
@@ -14,39 +15,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHealthChecks("/status");
 
-app.MapGet("/reservations", async (ApiDbContext db) => 
-    await db.Reservations.ToListAsync());
+app.MapGet("/reservations", async (IReservationService service) => 
+    await service.GetReservations());
 
-app.MapGet("/reservations/{id}", async (int id, ApiDbContext db) => 
-    await db.Reservations.FirstOrDefaultAsync(r => r.Id == id));
+app.MapGet("/reservations/{id}", async (int id, IReservationService service) => 
+    await service.GetReservation(id));
 
-app.MapGet("/reservations/check/{accomodationDate}", async (DateTime accomodationDate, ApiDbContext db) =>
-    {
-        await db.Reservations.FirstOrDefaultAsync(r => r.AccomodationStart >= accomodationDate && r.AccomodationEnd <= accomodationDate);
-    });
+app.MapGet("/reservations/check/{accomodationStart}/{accomodationEnd}", async (DateTime accomodationStart, DateTime accomodationEnd, IReservationService service) =>
+    await service.CheckPeriodAvailability(accomodationStart, accomodationEnd));
 
-app.MapPost("/reservations", async (Reservation reservation, ApiDbContext db) =>
-    {
-       db.Reservations.Add(reservation);
-       await db.SaveChangesAsync();
+app.MapPost("/reservations", async (Reservation reservation, IReservationService service) => 
+    await service.AddReservation(reservation));
 
-       return reservation; 
-    });
+app.MapPut("/reservations/{id}", async (int id, Reservation reservation, IReservationService service) =>
+    await service.ChangeReservation(id, reservation));
 
-app.MapPut("/reservations/{id}", async (int id, Reservation reservation, ApiDbContext db) =>
-    {
-        db.Entry(reservation).State = EntityState.Modified;
-        await db.SaveChangesAsync();
-        return reservation;
-    });
-
-app.MapDelete("/reservations/{id}", async (int id, ApiDbContext db) =>
-    {
-        var reservation = await db.Reservations.FirstOrDefaultAsync(r => r.Id == id);
-
-        db.Reservations.Remove(reservation);
-        await db.SaveChangesAsync();
-        return;
-    });
+app.MapDelete("/reservations/{id}", async (int id, IReservationService service) =>
+    await service.DeleteReservation(id));
 
 app.Run();
