@@ -7,6 +7,7 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddDbContext<ApiDbContext>(ServiceLifetime.Transient, ServiceLifetime.Scoped);
 var app = builder.Build();
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {

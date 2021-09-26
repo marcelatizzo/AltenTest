@@ -18,7 +18,7 @@ namespace Alten.API.Services
         public async Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd) =>
             await dbContext.Reservations.AllAsync(r =>
                 (r.AccomodationStart < accomodationStart || r.AccomodationStart > accomodationEnd) &&
-                (r.AccomodationEnd < accomodationStart && r.AccomodationEnd > accomodationEnd) &&
+                (r.AccomodationEnd < accomodationStart || r.AccomodationEnd > accomodationEnd) &&
                 (r.AccomodationStart >= accomodationStart || r.AccomodationEnd <= accomodationEnd));
 
         public async Task<List<Reservation>> GetReservations() => 
@@ -71,10 +71,10 @@ namespace Alten.API.Services
                 throw new ArgumentException("The period infomed is longer then the allowed.");
             }
 
-            // if (!(await CheckPeriodAvailability(reservation.AccomodationStart, reservation.AccomodationEnd)))
-            // {
-            //     throw new ArgumentException("The accomodation period informed is not available.");
-            // }
+            if (!(await CheckPeriodAvailability(reservation.AccomodationStart, reservation.AccomodationEnd)))
+            {
+                throw new ArgumentException("The accomodation period informed is not available.");
+            }
         }
     }
 }
