@@ -1,11 +1,13 @@
 using Alten.API.Models;
 using Alten.API.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 
-builder.Services.AddDbContext<ApiDbContext>(ServiceLifetime.Transient, ServiceLifetime.Scoped);
+builder.Services.AddDbContext<ApiDbContext>(option => option.Use(builder.Configuration.GetConnectionString("db")));
+
 var app = builder.Build();
 app.UseHttpsRedirection();
 

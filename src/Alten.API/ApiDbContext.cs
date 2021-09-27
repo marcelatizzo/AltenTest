@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 public class ApiDbContext : DbContext
 {
-    public ApiDbContext()
+    public ApiDbContext(DbContextOptions<ApiDbContext> options)
+        : base (options)
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}reservations.db";
     }
 
     public DbSet<Reservation> Reservations { get; set; }

@@ -1,14 +1,19 @@
-version: "3.9"  # optional since v1.27.0
+version: "3.9"
 services:
   alten-db:
     build: ./db
-    ports:
-      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PM4rcel#2022", "-Q", "select 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 1m30s
     environment:
-      MYSQL_ROOT_PASSWORD: P@ssw0rd
-      MYSQL_DATABASE: Hotel
-      MYSQL_USER: api_user
-      MYSQL_PASSWORD: \@P1User
+      ACCEPT_EULA: Y
+      SA_PASSWORD: M4rcel#2022
+      MSSQL_PID: Express
+    ports:
+        ["1433:1433"]
     networks:
       - alten-test-network
 
@@ -16,6 +21,7 @@ services:
     build: ./src/Alten.API
     ports:
       - "8001:80"
+    restart: always
     networks:
       - alten-test-network
 
@@ -23,6 +29,7 @@ services:
     build: ./src/Alten.API
     ports:
       - "8002:80"
+    restart: always
     networks:
       - alten-test-network
 
