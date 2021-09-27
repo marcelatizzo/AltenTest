@@ -23,3 +23,26 @@ Instructions :
 documenté. Tout shortcut non expliqué doit etre consideré comme une erreur. On
 pourrait accepter un rendu avec 3 lignes de code si elles ont du sens et que tout le
 raisonnement et les problèmatiques à prendre en compte sont decrites.
+
+## ABOUT THE PROJECT
+This project is running on a docker composer containing:
+    - 1 server for a mysql database
+    - 2 servers with the .NET 6 API running
+    - 1 server running nginx reverse proxy to serve as a load balancer
+
+To meet the requirement of 99.99% of availability I exemplified the creation of the project using the load balancer between the APIs. Although, I understand that the DB server is the weak point of this structure. In a real life scenario, I would suggest 2 db servers running in cluster.
+
+As for the API, I used the approach of minimal APIs introduced in .NET 6.
+
+## DOCKER IMAGES USED
+Downloading the docker images is optional, but may result in a faster first build of the application.
+
+docker pull nginx:alpine
+docker pull mysql:8.0.26
+docker pull mcr.microsoft.com/dotnet/aspnet:6.0
+
+## START THE APPLICATION
+From a terminal at the repository root folder, run the command:
+
+docker-compose up
+

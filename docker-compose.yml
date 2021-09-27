@@ -1,0 +1,39 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  alten-db:
+    build: ./db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: Hotel
+      MYSQL_USER: api_user
+      MYSQL_PASSWORD: \@P1User
+    networks:
+      - alten-test-network
+
+  alten-api-1:
+    build: ./src/Alten.API
+    ports:
+      - "8001:80"
+    networks:
+      - alten-test-network
+
+  alten-api-2:
+    build: ./src/Alten.API
+    ports:
+      - "8002:80"
+    networks:
+      - alten-test-network
+
+  alten-balancer:
+    build: ./balancer
+    ports:
+      - "8000:80"
+    restart: always
+    networks:
+      - alten-test-network
+
+networks: 
+    alten-test-network:
+      driver: bridge
