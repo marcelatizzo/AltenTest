@@ -29,23 +29,25 @@ raisonnement et les problèmatiques à prendre en compte sont decrites.
 
 This project is running on a docker composer containing:
 
-- 1 server for a mysql database
+- 1 server for a sql server database
 - 2 servers running the .Net 6 API
 - 1 server running nginx reverse proxy to serve as a load balancer
 
-To meet the requirement of 99.99% of availability I exemplified the creation of the project using the load balancer between the APIs. Although, I understand that the DB server is the weak point of this structure. In a real life scenario, I would suggest 2 db servers running in cluster.
+To meet the requirement of 99.99% of availability I exemplified the creation of the project using the load balancer between the APIs. As I understand that the DB server is the weak point of this structure, in a real life scenario I would suggest 2 db servers running in cluster.
+
+Also, on a real life scenario, this environment should be maintained via an orchestrator such as Kubernetes or Docker Swarm.
 
 As for the API, I used the approach of [minimal APIs](https://dotnetthoughts.net/minimal-api-in-aspnet-core-mvc6/) introduced in .NET 6.
 
 ## DOCKER IMAGES USED
 
+Pulling the docker images before executing the application is optional, but results in a faster first build.
+
 ``` command
 docker pull nginx:alpine
-docker pull mysql:8.0.26
+docker pull mcr.microsoft.com/mssql/server:2019-latest
 docker pull mcr.microsoft.com/dotnet/aspnet:6.0
 ```
-
-Downloading the docker images is optional, but results in a faster first build of the application.
 
 ## RUNNING THE APPLICATION
 
@@ -55,4 +57,8 @@ From a terminal at the repository root folder, run following command to start th
 docker-compose up
 ```
 
-To end the application you can press `Ctrl+C` on the terminal where the application is running.
+To end the application you can press `Ctrl+C` on the terminal where the application is running, or from another terminal in the same folder, run the following command.
+
+``` command
+docker-compose down
+```

@@ -6,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 
-builder.Services.AddDbContext<ApiDbContext>(option => option.Use(builder.Configuration.GetConnectionString("db")));
+var connString = builder.Configuration.GetConnectionString("db");
+Console.WriteLine(connString);
+builder.Services.AddDbContext<ApiDbContext>(options => options.UseSqlServer(connString));
 
 var app = builder.Build();
 app.UseHttpsRedirection();

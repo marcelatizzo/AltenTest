@@ -8,10 +8,5 @@ public class ApiDbContext : DbContext
     {
     }
 
-    public DbSet<Reservation> Reservations { get; set; }
-
-    public string DbPath { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite($"Data Source={DbPath}");
+    public DbSet<Reservation> Reservation { get; set; }
 }

@@ -13,22 +13,22 @@ namespace Alten.API.Services
         }
 
         public async Task<Reservation> GetReservation(int id) => 
-            await dbContext.Reservations.FirstOrDefaultAsync(r => r.Id == id);
+            await dbContext.Reservation.FirstOrDefaultAsync(r => r.Id == id);
 
         public async Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd) =>
-            await dbContext.Reservations.AllAsync(r =>
+            await dbContext.Reservation.AllAsync(r =>
                 (r.AccomodationStart < accomodationStart || r.AccomodationStart > accomodationEnd) &&
                 (r.AccomodationEnd < accomodationStart || r.AccomodationEnd > accomodationEnd) &&
                 (r.AccomodationStart >= accomodationStart || r.AccomodationEnd <= accomodationEnd));
 
         public async Task<List<Reservation>> GetReservations() => 
-            await dbContext.Reservations.ToListAsync();
+            await dbContext.Reservation.ToListAsync();
 
         public async Task AddReservation(Reservation reservation)
         {
             await ValidateReservation(reservation);
             
-            dbContext.Reservations.Add(reservation);
+            dbContext.Reservation.Add(reservation);
             await dbContext.SaveChangesAsync();
         }
 
@@ -49,7 +49,7 @@ namespace Alten.API.Services
             {
             var reservation = await GetReservation(id);
 
-            dbContext.Reservations.Remove(reservation);
+            dbContext.Reservation.Remove(reservation);
             await dbContext.SaveChangesAsync();
         }
 

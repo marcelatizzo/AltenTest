@@ -13,7 +13,7 @@ services:
       SA_PASSWORD: M4rcel#2022
       MSSQL_PID: Express
     ports:
-        ["1433:1433"]
+      - "1433:1433"
     networks:
       - alten-test-network
 
