@@ -51,13 +51,13 @@ public class ReservationController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Reservation>> GetReservations()
+    public async Task<IEnumerable<Reservation>> Get()
     {
         return await _service.GetReservations();
     }
 
     [HttpGet("{id}")]
-    public async Task<Reservation> GetReservation(int id)
+    public async Task<Reservation> Get(int id)
     {
         return await _service.GetReservation(id);
     }

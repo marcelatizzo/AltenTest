@@ -37,7 +37,9 @@ To meet the requirement of 99.99% of availability I exemplified the creation of 
 
 Also, on a real life scenario, this environment should be maintained via an orchestrator such as Kubernetes or Docker Swarm.
 
-As for the API, I used the approach of [minimal APIs](https://dotnetthoughts.net/minimal-api-in-aspnet-core-mvc6/) introduced in .NET 6.
+As for the API, the data is validated using FluentValidation. The API is documented using Swagger.
+
+As a shortcut, when handeling the dates I did not treat different timezones.
 
 ## DOCKER IMAGES USED
 
@@ -56,6 +58,8 @@ From a terminal at the repository root folder, run following command to start th
 ``` command
 docker-compose up
 ```
+
+The application should run on [http:/localhost:8000/](http:/localhost:8000/). The Swagger documentation is on [http:/localhost:8000/swagger](http:/localhost:8000/swagger).
 
 To end the application you can press `Ctrl+C` on the terminal where the application is running, or from another terminal in the same folder, run the following command.
 

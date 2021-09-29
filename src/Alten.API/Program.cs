@@ -1,3 +1,4 @@
+using Alten.API;
 using Alten.API.Services;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
