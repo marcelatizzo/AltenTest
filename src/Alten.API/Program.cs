@@ -1,41 +1,38 @@
-using Alten.API.Models;
 using Alten.API.Services;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
-builder.Services.AddScoped<IReservationService, ReservationService>();
 
-var connString = builder.Configuration.GetConnectionString("db");
-Console.WriteLine(connString);
-builder.Services.AddDbContext<ApiDbContext>(options => options.UseSqlServer(connString));
+builder.Services
+    .AddDbContext<ApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("db")))
+    .AddScoped<IReservationService, ReservationService>()
+    .AddControllers()
+    .AddFluentValidation(v =>
+    {
+        v.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+    });
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Alten API", Version = "v1" });
+});
 
 var app = builder.Build();
-app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alten API v1"));
 app.UseHealthChecks("/status");
 
-app.MapGet("/reservations", async (IReservationService service) => 
-    await service.GetReservations());
+app.UseHttpsRedirection();
 
-app.MapGet("/reservations/{id}", async (int id, IReservationService service) => 
-    await service.GetReservation(id));
-
-app.MapGet("/reservations/check/{accomodationStart}/{accomodationEnd}", async (DateTime accomodationStart, DateTime accomodationEnd, IReservationService service) =>
-    await service.CheckPeriodAvailability(accomodationStart, accomodationEnd));
-
-app.MapPost("/reservations", async (Reservation reservation, IReservationService service) => 
-    await service.AddReservation(reservation));
-
-app.MapPut("/reservations/{id}", async (int id, Reservation reservation, IReservationService service) =>
-    await service.ChangeReservation(id, reservation));
-
-app.MapDelete("/reservations/{id}", async (int id, IReservationService service) =>
-    await service.DeleteReservation(id));
+app.MapControllers();
 
 app.Run();

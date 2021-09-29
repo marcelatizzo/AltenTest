@@ -26,7 +26,7 @@ namespace Alten.API.Services
 
         public async Task AddReservation(Reservation reservation)
         {
-            await ValidateReservation(reservation);
+            await ValidatePeriodDisponibility(reservation);
             
             dbContext.Reservation.Add(reservation);
             await dbContext.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace Alten.API.Services
 
         public async Task ChangeReservation(int id, Reservation newData)
         {
-            await ValidateReservation(newData);
+            await ValidatePeriodDisponibility(newData);
 
             var reservation = await GetReservation(id);
             reservation.GuestName = newData.GuestName;
@@ -53,24 +53,8 @@ namespace Alten.API.Services
             await dbContext.SaveChangesAsync();
         }
 
-        private async Task ValidateReservation(Reservation reservation)
+        private async Task ValidatePeriodDisponibility(Reservation reservation)
         {
-            if (reservation.AccomodationEnd < reservation.AccomodationStart)
-            {
-                throw new ArgumentException("The accomodation period is invalid.");
-            }
-
-            var daysToAccomodationStart = reservation.AccomodationStart.Subtract(DateTime.Now).TotalDays;
-            if (daysToAccomodationStart < 1 || daysToAccomodationStart > 30)
-            {
-                throw new ArgumentException("The accomodation start date is invalid");                
-            }
-
-            if (reservation.AccomodationEnd.Subtract(reservation.AccomodationStart).TotalDays > 3)
-            {
-                throw new ArgumentException("The period infomed is longer then the allowed.");
-            }
-
             if (!(await CheckPeriodAvailability(reservation.AccomodationStart, reservation.AccomodationEnd)))
             {
                 throw new ArgumentException("The accomodation period informed is not available.");
