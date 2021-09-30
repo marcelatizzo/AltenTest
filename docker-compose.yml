@@ -4,10 +4,10 @@ services:
     build: ./db
     healthcheck:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PM4rcel#2022", "-Q", "select 1"]
-      interval: 30s
+      interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 1m30s
+      start_period: 10s
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: M4rcel#2022
@@ -19,6 +19,12 @@ services:
 
   alten-api-1:
     build: ./src/Alten.API
+    healthcheck:
+      test: curl --fail http://localhost:8001 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     ports:
       - "8001:80"
     restart: always
@@ -27,6 +33,12 @@ services:
 
   alten-api-2:
     build: ./src/Alten.API
+    healthcheck:
+      test: curl --fail http://localhost:8002 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     ports:
       - "8002:80"
     restart: always
@@ -35,6 +47,12 @@ services:
 
   alten-balancer:
     build: ./balancer
+    healthcheck:
+      test: curl --fail http://localhost:8000 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     ports:
       - "8000:80"
     restart: always

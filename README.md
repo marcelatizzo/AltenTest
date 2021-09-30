@@ -29,17 +29,19 @@ raisonnement et les problèmatiques à prendre en compte sont decrites.
 
 This project is running on a docker composer containing:
 
-- 1 server for a sql server database
-- 2 servers running the .Net 6 API
-- 1 server running nginx reverse proxy to serve as a load balancer
+- 1 container for a sql server database
+- 2 containers running the .Net 6 API
+- 1 container running nginx reverse proxy to serve as an API load balancer
 
-To meet the requirement of 99.99% of availability I exemplified the creation of the project using the load balancer between the APIs. As I understand that the DB server is the weak point of this structure, in a real life scenario I would suggest 2 db servers running in cluster.
+To meet the requirement of 99.99% of availability I exemplified the creation of the project using the load balancer between the APIs. In production scenario would be used in a container orchestration tool. As I understand that the DB server is the weak point of this structure, in a real life scenario I would suggest 2 db servers running in cluster.
 
-Also, on a real life scenario, this environment should be maintained via an orchestrator such as Kubernetes or Docker Swarm.
+Also, on a real life scenario, those containers' should be maintained via a container orchestration tool such as Kubernetes or Docker Swarm to ensure high availability, resiliency and redundancy.
+
+In the docker-compose file and docker files I wrote users and passwords in clean text. In real life scenario would be used environment variables.
 
 As for the API, the data is validated using FluentValidation. The API is documented using Swagger.
 
-As a shortcut, when handeling the dates I did not treat different timezones.
+As a shortcut, when handling the dates I did not treat different timezones.
 
 ## DOCKER IMAGES USED
 
@@ -59,9 +61,9 @@ From a terminal at the repository root folder, run following command to start th
 docker-compose up
 ```
 
-The application should run on [http:/localhost:8000/](http:/localhost:8000/). The Swagger documentation is on [http:/localhost:8000/swagger](http:/localhost:8000/swagger).
+The application will run on [http:/localhost:8000/](http:/localhost:8000/). The Swagger documentation is on [http:/localhost:8000/swagger](http:/localhost:8000/swagger).
 
-To end the application you can press `Ctrl+C` on the terminal where the application is running, or from another terminal in the same folder, run the following command.
+To end the application you can press `Ctrl+C` on the terminal where the application is running, or from another terminal at the same folder, run the following command.
 
 ``` command
 docker-compose down
@@ -69,4 +71,6 @@ docker-compose down
 
 ## TESTING THE APPLICATION
 
-Beside the Swagger UI, on the repository root folder I exported a Thunder Client collection with all methods to facilitate the method execution.
+Beside the Swagger UI, on the repository root folder I exported a [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) collection with all methods to facilitate the method execution.
+
+About the test project, I didn't create any integration tests for the API, but created the unit tests for the data validation and used in-memory DB, so no container is necessary to run the unit tests.
