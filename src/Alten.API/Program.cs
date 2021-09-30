@@ -2,7 +2,8 @@ using Alten.API;
 using Alten.API.Services;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation.AspNetCore;
-using System.Reflection;
+using Alten.API.Models;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
@@ -11,10 +12,9 @@ builder.Services
     .AddDbContext<ApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("db")))
     .AddScoped<IReservationService, ReservationService>()
     .AddControllers()
-    .AddFluentValidation(v =>
-    {
-        v.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-    });
+    .AddFluentValidation(fv => {});
+
+builder.Services.AddTransient<IValidator<Reservation>, ReservationModelValidator>();
 
 builder.Services.AddSwaggerGen(c =>
 {
