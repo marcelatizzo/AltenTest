@@ -1,4 +1,3 @@
-using Alten.API.Services;
 using FluentValidation;
 
 namespace Alten.API.Models;
