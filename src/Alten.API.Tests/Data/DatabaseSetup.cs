@@ -17,17 +17,6 @@ public static class DatabaseSetup
 
         var dbContext = new ApiDbContext(dbOptions);
 
-        DatabaseSetup.SeedData(dbContext);
-
         return dbContext;
-    }
-
-    private static void SeedData(ApiDbContext dbContext)
-    {
-        var baseDate = DateTime.Today;
-
-        dbContext.Reservation.Add(new Reservation { GuestName = "Guest 1", AccomodationStart = baseDate.AddDays(5), AccomodationEnd = baseDate.AddDays(7) });
-        
-        dbContext.SaveChanges();
     }
 }
