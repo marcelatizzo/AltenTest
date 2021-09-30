@@ -15,11 +15,12 @@ public class ReservationService : IReservationService
     public async Task<Reservation> GetReservation(int id) => 
         await dbContext.Reservation.FirstOrDefaultAsync(r => r.Id == id);
 
-    public async Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd) =>
+    public async Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd, int reservationIdToIgnore=0) =>
         await dbContext.Reservation.AllAsync(r =>
-            (r.AccomodationStart < accomodationStart || r.AccomodationStart > accomodationEnd) &&
-            (r.AccomodationEnd < accomodationStart || r.AccomodationEnd > accomodationEnd) &&
-            (r.AccomodationStart >= accomodationStart || r.AccomodationEnd <= accomodationEnd));
+            (r.Id == reservationIdToIgnore) ||
+            (   (r.AccomodationStart < accomodationStart || r.AccomodationStart > accomodationEnd) &&
+                (r.AccomodationEnd < accomodationStart || r.AccomodationEnd > accomodationEnd) &&
+                (r.AccomodationStart >= accomodationStart || r.AccomodationEnd <= accomodationEnd)));
 
     public async Task<List<Reservation>> GetReservations() => 
         await dbContext.Reservation.ToListAsync();

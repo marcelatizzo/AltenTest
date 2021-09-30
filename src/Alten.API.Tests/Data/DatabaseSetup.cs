@@ -26,7 +26,7 @@ public static class DatabaseSetup
     {
         var baseDate = DateTime.Today;
 
-        dbContext.Reservation.Add(new Reservation { GuestName = "Guest 1", AccomodationStart = baseDate.AddDays(5), AccomodationEnd = baseDate.AddDays(8).AddSeconds(-1) });
+        dbContext.Reservation.Add(new Reservation { GuestName = "Guest 1", AccomodationStart = baseDate.AddDays(5), AccomodationEnd = baseDate.AddDays(7) });
         
         dbContext.SaveChanges();
     }

@@ -66,3 +66,7 @@ To end the application you can press `Ctrl+C` on the terminal where the applicat
 ``` command
 docker-compose down
 ```
+
+## TESTING THE APPLICATION
+
+Beside the Swagger UI, on the repository root folder I exported a Thunder Client collection with all methods to facilitate the method execution.

@@ -9,5 +9,5 @@ public interface IReservationService
     Task AddReservation(Reservation reservation);
     Task ChangeReservation(int id, Reservation reservation);
     Task DeleteReservation(int id);
-    Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd);
+    Task<bool> CheckPeriodAvailability(DateTime accomodationStart, DateTime accomodationEnd, int reservationIdToIgnore=0);
 }

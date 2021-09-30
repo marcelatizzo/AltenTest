@@ -1,5 +1,6 @@
 using Alten.API.Models;
 using Alten.API.Services;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alten.API.Controllers;
@@ -20,6 +21,17 @@ public class ReservationController : ControllerBase
     {
         try
         {
+            reservation.Id = 0;
+
+            var periodValidator = new ReservationPeriodValidator(_service);
+            var validationResult = periodValidator.Validate(reservation);
+
+            if (!validationResult.IsValid)
+            {
+                validationResult.AddToModelState(ModelState, null);
+                return BadRequest(ModelState);
+            }
+
             await _service.AddReservation(reservation);
             return Ok();
         }
@@ -29,11 +41,22 @@ public class ReservationController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody]Reservation reservation)
     {
         try
         {
+            reservation.Id = id;
+
+            var periodValidator = new ReservationPeriodValidator(_service);
+            var validationResult = periodValidator.Validate(reservation);
+
+            if (!validationResult.IsValid)
+            {
+                validationResult.AddToModelState(ModelState, null);
+                return BadRequest(ModelState);
+            }
+
             await _service.ChangeReservation(id, reservation);
             return Ok();
         }
@@ -43,7 +66,7 @@ public class ReservationController : ControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteReservation(id);
